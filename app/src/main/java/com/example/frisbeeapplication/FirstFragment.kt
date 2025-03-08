@@ -15,6 +15,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.frisbeeapplication.databinding.FragmentFirstBinding
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 
 class FirstFragment : Fragment() {
 
@@ -59,8 +64,27 @@ class FirstFragment : Fragment() {
         val bluetoothManager = requireContext().getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
         bluetoothAdapter = bluetoothManager.adapter
 
+//        binding.buttonFirst.setOnClickListener {
+//            //findNavController().navigate(R.id.action_FirstFragment_to_DashboardFragment)
+//            checkAndEnableBluetooth()
+//        }
         binding.buttonFirst.setOnClickListener {
-            //findNavController().navigate(R.id.action_FirstFragment_to_DashboardFragment)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) { // Android 12+
+                val permissions = arrayOf(
+                    Manifest.permission.BLUETOOTH_SCAN,
+                    Manifest.permission.BLUETOOTH_CONNECT
+                )
+
+                val missingPermissions = permissions.filter {
+                    ContextCompat.checkSelfPermission(requireContext(), it) != PackageManager.PERMISSION_GRANTED
+                }.toTypedArray()
+
+                if (missingPermissions.isNotEmpty()) {
+                    ActivityCompat.requestPermissions(requireActivity(), missingPermissions, 1)
+                    return@setOnClickListener
+                }
+            }
+
             checkAndEnableBluetooth()
         }
     }
