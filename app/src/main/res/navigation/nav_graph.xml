@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/FirstFragment">
+
+    <fragment
+        android:id="@+id/FirstFragment"
+        android:name="com.example.frisbeeapplication.FirstFragment"
+        android:label="@string/first_fragment_label"
+        tools:layout="@layout/fragment_first">
+
+        <action
+            android:id="@+id/action_FirstFragment_to_DashboardFragment"
+            app:destination="@id/DashboardFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/DashboardFragment"
+        android:name="com.example.frisbeeapplication.DashboardFragment"
+        android:label="Dashboard Fragment"
+        tools:layout="@layout/fragment_dashboard">
+
+        <action
+            android:id="@+id/action_DashboardFragment_to_ManualFragment"
+            app:destination="@id/ManualFragment" />
+        <action
+            android:id="@+id/action_DashboardFragment_to_UserHeightFragment"
+            app:destination="@id/UserHeightFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/UserHeightFragment"
+        android:name="com.example.frisbeeapplication.UserHeightFragment"
+        android:label="User Height Fragment"
+        tools:layout="@layout/fragment_user_height">
+        <action
+            android:id="@+id/action_UserHeightFragment_to_AutoFragment"
+            app:destination="@id/AutoFragment" />
+        <action
+            android:id="@+id/action_UserHeightFragment_to_DashboardFragment"
+            app:destination="@id/DashboardFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/ManualFragment"
+        android:name="com.example.frisbeeapplication.ManualFragment"
+        android:label="Manual Fragment"
+        tools:layout="@layout/fragment_manual">
+        <action
+            android:id="@+id/action_ManualFragment_to_DashboardFragment"
+            app:destination="@id/DashboardFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/AutoFragment"
+        android:name="com.example.frisbeeapplication.AutoFragment"
+        android:label="Auto Fragment"
+        tools:layout="@layout/fragment_auto">
+        <action
+            android:id="@+id/action_AutoFragment_to_UserHeightFragment"
+            app:destination="@id/UserHeightFragment" />
+    </fragment>
+
+</navigation>
