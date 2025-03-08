@@ -1,2 +1,2 @@
-# frisbee-application
-Android application for frisbee launcher (FYDP
+# Frisbee Launcher Application
+Android application for frisbee launcher (FYDP)
