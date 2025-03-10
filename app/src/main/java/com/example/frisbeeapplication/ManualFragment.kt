@@ -1,6 +1,7 @@
 package com.example.frisbeeapplication
 
 import BluetoothViewModel
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.frisbeeapplication.databinding.FragmentManualBinding
 import android.os.Handler
 import android.os.Looper
+import android.view.inputmethod.InputMethodManager
 
 class ManualFragment : Fragment() {
     private var _binding: FragmentManualBinding? = null
@@ -48,8 +50,6 @@ class ManualFragment : Fragment() {
             binding.seekbarSpeed.isEnabled = isConnected
             binding.buttonLeft.isEnabled = isConnected
             binding.buttonRight.isEnabled = isConnected
-            binding.buttonUp.isEnabled = isConnected
-            binding.buttonDown.isEnabled = isConnected
             binding.buttonReset.isEnabled = isConnected
         }
 
@@ -65,10 +65,40 @@ class ManualFragment : Fragment() {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
 
+        binding.inputHorizontalTilt.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                sendHorizontalData()
+            }
+        }
+
+        binding.inputHorizontalTilt.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_DONE) {
+                sendHorizontalData()
+                hideKeyboard()
+                true
+            } else {
+                false
+            }
+        }
+
+        binding.inputVerticalTilt.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                sendVerticalData()
+            }
+        }
+
+        binding.inputVerticalTilt.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_DONE) {
+                sendVerticalData()
+                hideKeyboard()
+                true
+            } else {
+                false
+            }
+        }
+
         setupHoldButton(binding.buttonLeft, "Left")
         setupHoldButton(binding.buttonRight, "Right")
-        setupHoldButton(binding.buttonUp, "Up")
-        setupHoldButton(binding.buttonDown, "Down")
 
         binding.buttonBack.setOnClickListener {
             bluetoothViewModel.sendDataToBluetooth("MODE:OFF")
@@ -82,8 +112,68 @@ class ManualFragment : Fragment() {
         }
 
         binding.buttonThrow.setOnClickListener {
-            bluetoothViewModel.sendDataToBluetooth("Direction:Throw")
-            Toast.makeText(requireContext(), "Sent: Direction:Throw", Toast.LENGTH_SHORT).show()
+            val horizontalAngleText = binding.inputHorizontalTilt.text.toString().trim()
+            val verticalAngleText = binding.inputVerticalTilt.text.toString().trim()
+
+            val horizontalAngle = if (horizontalAngleText.isEmpty()) 0.0 else horizontalAngleText.toDouble()
+            val verticalAngle = if (verticalAngleText.isEmpty()) 0.0 else verticalAngleText.toDouble()
+
+            val horizontalMin = -20.0
+            val horizontalMax = 20.0
+            val verticalMin = 0.0
+            val verticalMax = 16.0
+
+            if (horizontalAngle < horizontalMin || horizontalAngle > horizontalMax) {
+                Toast.makeText(requireContext(), "Horizontal Angle must be between $horizontalMin and $horizontalMax", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if (verticalAngle < verticalMin || verticalAngle > verticalMax) {
+                Toast.makeText(requireContext(), "Vertical Angle must be between $verticalMin and $verticalMax", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            bluetoothViewModel.sendDataToBluetooth("Direction:Throw;HorizontalAngle:$horizontalAngle;VerticalAngle:$verticalAngle")
+            Toast.makeText(requireContext(), "Sent: Direction:Throw;HorizontalAngle:$horizontalAngle;VerticalAngle:$verticalAngle", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun sendHorizontalData() {
+        val horizontalAngleText = binding.inputHorizontalTilt.text.toString().trim()
+        val horizontalAngle = if (horizontalAngleText.isEmpty()) 0.0 else horizontalAngleText.toDouble()
+
+        val horizontalMin = -20.0
+        val horizontalMax = 20.0
+
+        if (horizontalAngle < horizontalMin || horizontalAngle > horizontalMax) {
+            Toast.makeText(requireContext(), "Horizontal Angle must be between $horizontalMin and $horizontalMax", Toast.LENGTH_SHORT).show()
+        } else {
+            bluetoothViewModel.sendDataToBluetooth("Direction:HorizontalAngle:$horizontalAngle")
+            Toast.makeText(requireContext(), "Sent: Horizontal Angle: $horizontalAngle", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    // Function to send vertical angle data to Bluetooth
+    private fun sendVerticalData() {
+        val verticalAngleText = binding.inputVerticalTilt.text.toString().trim()
+        val verticalAngle = if (verticalAngleText.isEmpty()) 0.0 else verticalAngleText.toDouble()
+
+        val verticalMin = 0.0
+        val verticalMax = 16.0
+
+        if (verticalAngle < verticalMin || verticalAngle > verticalMax) {
+            Toast.makeText(requireContext(), "Vertical Angle must be between $verticalMin and $verticalMax", Toast.LENGTH_SHORT).show()
+        } else {
+            bluetoothViewModel.sendDataToBluetooth("Direction:VerticalAngle:$verticalAngle")
+            Toast.makeText(requireContext(), "Sent: Vertical Angle: $verticalAngle", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun hideKeyboard() {
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val view = activity?.currentFocus
+        view?.let {
+            imm.hideSoftInputFromWindow(it.windowToken, 0)
         }
     }
 
@@ -112,7 +202,7 @@ class ManualFragment : Fragment() {
             bluetoothViewModel.sendDataToBluetooth("Direction:$command")
             Toast.makeText(requireContext(), "Sent: Direction:$command", Toast.LENGTH_SHORT).show()
 
-            handler.postDelayed({ sendRepeatedCommand(command) }, 200) // Adjust delay as needed
+            handler.postDelayed({ sendRepeatedCommand(command) }, 100)
         }
     }
 

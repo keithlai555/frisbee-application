@@ -96,7 +96,6 @@
             android:layout_marginEnd="16dp"
             android:padding="12dp"/>
 
-        <!-- Right Button -->
         <Button
             android:id="@+id/button_right"
             android:layout_width="wrap_content"
@@ -108,12 +107,11 @@
 
     </LinearLayout>
 
-    <!-- Tilt Angle (Up and Down Buttons) -->
     <TextView
         android:id="@+id/tilt_angle_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Tilt Angle"
+        android:text="Tilt Angles"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@id/throwing_direction_buttons"
@@ -123,7 +121,7 @@
         android:layout_marginTop="40dp"/>
 
     <LinearLayout
-        android:id="@+id/tilt_angle_buttons"
+        android:id="@+id/tilt_input_fields"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -133,27 +131,40 @@
         android:layout_marginTop="16dp"
         android:gravity="center">
 
-        <!-- Up Button -->
-        <Button
-            android:id="@+id/button_up"
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Horizontal Angle"
+                android:textSize="12sp"/>
+            <EditText
+                android:id="@+id/input_horizontal_tilt"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal|numberSigned"
+                android:text="0.0"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="↑"
-            android:textSize="24sp"
-            android:fontFamily="monospace"
-            android:layout_marginEnd="16dp"
-            android:padding="12dp"/>
-
-        <!-- Down Button -->
-        <Button
-            android:id="@+id/button_down"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="↓"
-            android:fontFamily="monospace"
-            android:textSize="24sp"
-            android:padding="12dp"/>
-
+            android:layout_marginStart="16dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vertical Angle"
+                android:textSize="12sp"/>
+            <EditText
+                android:id="@+id/input_vertical_tilt"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:text="0.0"/>
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -161,7 +172,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/tilt_angle_buttons"
+        app:layout_constraintTop_toBottomOf="@id/tilt_input_fields"
         app:layout_constraintBottom_toTopOf="@id/button_back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
