@@ -44,7 +44,7 @@ class FirstFragment : Fragment() {
             startActivity(enableBtIntent)
         } else {
             Toast.makeText(requireContext(), "Attempting to connect to Raspberry Pi...", Toast.LENGTH_SHORT).show()
-            bluetoothViewModel.connectToManuallyPairedDevice("ianraspberrypi")
+            bluetoothViewModel.connectToManuallyPairedDevice("eric-raspberrypi")
 
             bluetoothViewModel.connectionStatus.observe(viewLifecycleOwner) { isConnected ->
                 if (isConnected) {

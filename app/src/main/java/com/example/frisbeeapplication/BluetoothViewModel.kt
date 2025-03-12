@@ -38,7 +38,7 @@ class BluetoothViewModel : ViewModel() {
         val device = getPairedDevice(deviceName)
         if (device != null) {
             try {
-                bluetoothAdapter?.cancelDiscovery() // Cancel scanning before connecting
+                bluetoothAdapter?.cancelDiscovery()
 
                 // Use RFCOMM UUID for Bluetooth Classic
                 val uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB") // Standard Serial Port Profile UUID

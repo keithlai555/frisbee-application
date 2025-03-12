@@ -39,7 +39,7 @@ class DashboardFragment : Fragment() {
         }
 
         binding.buttonReconnect.setOnClickListener {
-            bluetoothViewModel.connectToManuallyPairedDevice("ianraspberrypi")
+            bluetoothViewModel.connectToManuallyPairedDevice("eric-raspberrypi")
         }
 
     }

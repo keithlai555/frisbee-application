@@ -59,7 +59,7 @@ class AutoFragment : Fragment() {
 
     private fun showToastAtTop(message: String) {
         val toast = Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT)
-        toast.setGravity(android.view.Gravity.TOP, 100, 200) // Position at top with slight offset
+        toast.setGravity(android.view.Gravity.TOP, 100, 200)
         toast.show()
     }
 
